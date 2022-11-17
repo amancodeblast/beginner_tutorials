@@ -1,0 +1,6 @@
+Done processing ./src/new_publisher.cpp
+Done processing ./src/publisher_member_function.cpp
+Done processing ./src/server.cpp
+Done processing ./src/stringserver.cpp
+Done processing ./src/subscriber_member_function.cpp
+Total errors found: 20
