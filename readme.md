@@ -7,7 +7,7 @@
 * Ros 2 Humble installed 
 * And a workspace created for ros2. If not then follow the instructions below:
 <details>
-<summary>How to reate a ros Workspace?</summary>
+<summary>How to create a ros Workspace?</summary>
 
 ```xml
 mkdir -p ~/ros2_ws/src
@@ -26,7 +26,7 @@ Inside your ros_workspace/src clone the following package
 ```xml 
 git clone https://github.com/amancodeblast/beginner_tutorials.git
 ```
-make sure you have selected the tag "ros_pub_sub_Release"
+make sure you have selected the tag "Week10_HW"
 </details>
 
 
@@ -57,38 +57,22 @@ Now running the listener or subscriber on another terminal
 
 ```ros2 run beginner_tutorials listener```
 </details>
-### How this package was build
-<details>
-<summary>Create a Ros Package from scratch</summary>
 
-```ros2 pkg create --build-type ament_cmake beginner_tutorials```
-</details>
-
-<details>
-<summary>Write Publisher Subscriber node </summary>
-
-Download the scripts in src folder
-For subscriber 
-```xml
- wget -O subscriber_member_function.cpp https://raw.githubusercontent.com/ros2/examples/humble/rclcpp/topics/minimal_subscriber/member_function.cpp 
- ```
-For publisher 
+## Logging
+* Invoke rqt console GUI
 ```xml 
-wget -O publisher_member_function.cpp https://raw.githubusercontent.com/ros2/examples/humble/rclcpp/topics/minimal_publisher/member_function.cpp
+rqt_console
+rqt_graph
 ```
 
-The publisher and the subscriber is slightly changed for this repo for a custom message. You can compare the original file from the one in the repo.   
+## Results
+### RQT Output 
+**LOGGER INFO**
+![Logger Info](results/rqt_graph_results.png)
 
-</details>
-
-<details>
-<summary>Change the Cmakelist.txt or package.xml</summary>
-
-Check the link here to change the Cmakelist.txt and the package.xml for publisher and subscriber code. [Link](http://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html#add-dependencies)
-</details>
 ## Running Linterand checker
 <details>
-<summary>Execute the following scripts for Linter and CHecker output </summary>
+<summary>Execute the following scripts for Linter and Checker output </summary>
 
 ```xml 
 sh cpplint.sh
@@ -96,3 +80,4 @@ sh cppcheck.sh
 ```
 
 </details>
+
