@@ -50,12 +50,9 @@ Open a new terminal, navigate to ros2_ws, and source the setup files:
 
 Now running the talker or publisher node
 
-```ros2 run beginner_tutorials talker```
+```ros2 launch final.yaml frequency:=10.0```
 
-Now running the listener or subscriber on another terminal 
-**Note**: Don't forget to source the workspace in every terminal you want to use ros commands 
 
-```ros2 run beginner_tutorials listener```
 </details>
 
 ## Logging
