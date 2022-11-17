@@ -1,9 +1,10 @@
+[![GitHub license](https://badgen.net/github/license/Naereen/Strapdown.js)](LICENSE.md)
 # Beginers Tutorial 
-## A simple Publisher Subscriber
+## A simple Service Client with Publisher and Subscriber
 
 ### Dependencies
 * Installed on Linux (Ubuntu 22.04)
-* Ros 2 Humble installed
+* Ros 2 Humble installed 
 * And a workspace created for ros2. If not then follow the instructions below:
 <details>
 <summary>How to reate a ros Workspace?</summary>
@@ -20,6 +21,7 @@ These simple steps are to be followed to replicate the work of this repository f
 
 <details>
 <summary>Clone this package </summary>
+Inside your ros_workspace/src clone the following package
 
 ```xml 
 git clone https://github.com/amancodeblast/beginner_tutorials.git
@@ -55,7 +57,6 @@ Now running the listener or subscriber on another terminal
 
 ```ros2 run beginner_tutorials listener```
 </details>
-
 ### How this package was build
 <details>
 <summary>Create a Ros Package from scratch</summary>
@@ -76,11 +77,22 @@ For publisher
 wget -O publisher_member_function.cpp https://raw.githubusercontent.com/ros2/examples/humble/rclcpp/topics/minimal_publisher/member_function.cpp
 ```
 
-The publisher and the subscriber is slightly changed for this repo for a custom message. You can compare the original file from the one in the repo. 
+The publisher and the subscriber is slightly changed for this repo for a custom message. You can compare the original file from the one in the repo.   
+
 </details>
 
 <details>
 <summary>Change the Cmakelist.txt or package.xml</summary>
 
 Check the link here to change the Cmakelist.txt and the package.xml for publisher and subscriber code. [Link](http://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html#add-dependencies)
+</details>
+## Running Linterand checker
+<details>
+<summary>Execute the following scripts for Linter and CHecker output </summary>
+
+```xml 
+sh cpplint.sh
+sh cppcheck.sh
+```
+
 </details>
