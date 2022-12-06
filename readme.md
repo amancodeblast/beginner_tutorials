@@ -40,7 +40,7 @@ colcon build --packages-select beginner_tutorials
 ``` 
 </details>
 <details>
-<summary>Source the workspace and run the nodes </summary>
+<summary>Source the workspace and run the nodes using  a launch file </summary>
 
 Open a new terminal, navigate to ros2_ws, and source the setup files:
 
@@ -51,7 +51,6 @@ Open a new terminal, navigate to ros2_ws, and source the setup files:
 Now running the talker or publisher node
 
 ```ros2 launch final.yaml frequency:=10.0```
-
 
 </details>
 
