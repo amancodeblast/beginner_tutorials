@@ -66,6 +66,70 @@ rqt_graph
 **LOGGER INFO**
 ![Logger Info](results/rqt_graph_results.png)
 
+## Run Instructions
+
+### Publisher Demo 
+In a new terminal, navigate to your ROS2 workspace (```ros2_ws```) and source the setup files,
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 run beginner_tutorials talker
+```
+
+### Subscriber Demo
+In another terminal, navigate to your ROS2 workspace (```ros2_ws```) and source the setup files,
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 run beginner_tutorials listener
+```
+
+Enter ```Ctrl+c``` in each terminal to stop the nodes from spinning.
+
+### Publisher-Subscriber launch 
+In another new terminal, navigate to your ROS2 workspace (```ros2_ws```) and source the setup files,
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 launch beginner_tutorials rosbag_launch.py 
+```
+To launch the nodes by setting parameter -record all topics to bag files
+navigate to your ROS2 workspace (```ros2_ws```) and source the setup files,
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 launch beginner_tutorials rosbag_launch.py record_all_topics:=True
+```
+
+### To see bag files info
+
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 bag info all_topics_bag
+```
+
+### Service Demo
+In a new terminal, navigate to your ROS2 workspace (```ros2_ws```) and source the setup files,
+```
+cd <path-to-ROS2-workspace>/ros2_ws
+. install/setup.bash
+ros2 service call /update_string beginner_tutorials/srv/RenameString "{inp: 'This is my new message'}"
+```
+### Testing  
+**Build Testing**  
+```bash
+colcon test --packages-select beginner_tutorials
+```
+**Verbose Output**  
+```bash
+colcon test --event-handlers console_direct+ --packages-select beginner_tutorials
+```
+**Return Status**  
+```bash
+colcon test-result --test-result-base build/beginner_tutorials
+echo $?
+```
 ## Running Linterand checker
 <details>
 <summary>Execute the following scripts for Linter and Checker output </summary>
