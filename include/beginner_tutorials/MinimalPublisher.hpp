@@ -1,4 +1,11 @@
-
+/**
+ * @file main.cpp
+ * @author Aman Sharma (amankrsharma3@gmail.com)
+ * @brief Rostest to test the talker node.
+ * @version 0.1
+ * @date 2022-12-01
+ * 
+ */
 #pragma once
 
 #include <chrono>
