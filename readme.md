@@ -26,7 +26,7 @@ Inside your ros_workspace/src clone the following package
 ```xml 
 git clone https://github.com/amancodeblast/beginner_tutorials.git
 ```
-make sure you have selected the tag "Week10_HW"
+make sure you have selected the tag "Week12_HW"
 </details>
 
 
