@@ -1,11 +1,4 @@
-/**
- * @file main.cpp
- * @author Harika Pendli (hpendli@umd.edu)
- * @brief Rostest to test the talker node.
- * @version 0.1
- * @date 2022-12-01
- * 
- */
+
 #include <gtest/gtest.h>
 #include "rclcpp/rclcpp.hpp"
 

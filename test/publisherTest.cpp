@@ -1,11 +1,4 @@
-/**
- * @file publisherTest.cpp
- * @author Harika Pendli (hpendli@umd.edu)
- * @brief Source file to implement a simple ROS test
- * @version 0.1
- * @date 2022-12-01
- * 
- */
+
 #include <gtest/gtest.h>
 #include <stdlib.h>
 #include "rclcpp/rclcpp.hpp"

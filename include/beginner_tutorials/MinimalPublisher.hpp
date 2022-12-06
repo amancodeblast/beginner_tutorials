@@ -1,13 +1,4 @@
-/**
- * @file MinimalPublisher.hpp
- * @author Harika Pendli (hpendli@umd.edu)
- * @brief Class implementation of the Minimal publisher
- * @version 0.1
- * @date 2022-11-08
- *
- * @copyright Copyright (c) 2022
- *
- */
+
 #pragma once
 
 #include <chrono>
