@@ -1,209 +1,119 @@
-/**
- * @file publisher_member_function.cpp
- * @author Aman Sharma (amankrsharma3@gmail.com)
- * @brief Template for Publisuher ROS2
- * @version 0.1
- * @date 2022-10-30
- * 
- * @copyright Copyright (c) 2022
- * 
- */
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "beginner_tutorials/srv/modify_string.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2_ros/transform_broadcaster.h"
-
-using std::placeholders::_1;
-using namespace std::chrono_literals;
-
-using sharedFuture =
-  rclcpp::Client<beginner_tutorials::srv::ModifyString>::SharedFuture;
+// Copyright 2016 Open Source Robotics Foundation, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 /* This example creates a subclass of Node and uses std::bind() to register a
  * member function as a callback from the timer. */
 
-class MinimalPublisher : public rclcpp::Node {
- public:
-  MinimalPublisher()  // Object for node is created using a constructor
-  : Node("minimal_publisher"), count_(0) {
-    // Declaring parameter
-    auto param_desc = rcl_interfaces::msg::ParameterDescriptor();
-    param_desc.description = "Set callback frequency.";
-    this->declare_parameter("freq", 2.0, param_desc);
-    // Fetching value from the parameter server
-    auto param = this->get_parameter("freq");
-    auto freq = param.get_parameter_value().get<std::float_t>();
-    RCLCPP_DEBUG(this->get_logger(),
-          "Declared parameter freq and set to 2.0 hz");
+#include <signal.h>
 
-    // Creating a subscriber for Parameter
-    // and setting up call back to change frequency
-    m_param_subscriber_ = std::make_shared<rclcpp::ParameterEventHandler>(this);
-    RCLCPP_DEBUG(this->get_logger(), "Parameter event Handler  is Created");
-    auto paramCallbackPtr =
-            std::bind(&MinimalPublisher::param_callback, this, _1);
-    m_paramHandle_ =
-          m_param_subscriber_->add_parameter_callback("freq", paramCallbackPtr);
+#include <chrono>
 
+#include "../include/beginner_tutorials/MinimalPublisher.hpp"
 
-  // Creating a Publisher
-    publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
-    RCLCPP_DEBUG(this->get_logger(), "Publisher is Created");
-    auto period = std::chrono::milliseconds(static_cast<int>((1000 / freq)));
-    timer_ = this->create_wall_timer(
-    period, std::bind(&MinimalPublisher::timer_callback, this));
-
-
-
-  // Creating a Client
-    client =
-    this->create_client<beginner_tutorials::srv::ModifyString>("modify_string");
-    RCLCPP_DEBUG(this->get_logger(), "Client is Created");
-    while (!client->wait_for_service(1s)) {
-        if (!rclcpp::ok()) {
-          RCLCPP_FATAL(rclcpp::get_logger("rclcpp"),
-                    "Interrupted while waiting for the service. Exiting.");
-          exit(EXIT_FAILURE);
-        }
-        RCLCPP_WARN(rclcpp::get_logger("rclcpp"),
-                    "service not available, waiting again...");
-      }
-  // Initialize the transform broadcaster
-    tf_broadcaster_ =
-      std::make_unique<tf2_ros::TransformBroadcaster>(*this);
-  }
-
- private:
-  // Variables
-  std::string Message = "Aman";
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
-  rclcpp::Client<beginner_tutorials::srv::ModifyString>::SharedPtr client;
-
-  size_t count_;
-  std::shared_ptr<rclcpp::ParameterEventHandler>  m_param_subscriber_;
-  std::shared_ptr<rclcpp::ParameterCallbackHandle> m_paramHandle_;
-
-  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-/**
- * @brief Method that runs after every 1000ms (Set as base frequency)
- * 
- */
-  void timer_callback() {
-    // C++ stream style
-    RCLCPP_INFO_STREAM_ONCE(this->get_logger(), "The Node Has been Setup");
-    auto message = std_msgs::msg::String();
-    message.data = "Hola amigo, " +Message + std::to_string(count_++);
-    RCLCPP_INFO(this->get_logger(), "Soft Dev: '%s'", message.data.c_str());
-    publisher_->publish(message);
-    if (count_%10 == 0) {
-      call_service();
-    }
-    // Send Transform
-    transform_publish();
-    auto steady_clock = rclcpp::Clock();
-    RCLCPP_DEBUG_STREAM_THROTTLE(this->get_logger(),
-         steady_clock, 10000, "Node Running in Healthy Way");
-  }
+auto main_string = std::string("This is my main string");
 
 /**
- * @brief Method to call service by sending a request
- * 
- * @return int 
+ * @brief Construct a new Minimal Publisher:: Minimal Publisher object
+ *
  */
-  int call_service() {
-    auto request =
-        std::make_shared<beginner_tutorials::srv::ModifyString::Request>();
-    request->a = "This";
-    request->b = "Bird";
-    RCLCPP_INFO(this->get_logger(), "service for modification");
-    auto callbackPtr  =
-        std::bind(&MinimalPublisher::response_callback, this, _1);
-    client->async_send_request(request, callbackPtr);
-    return 1;
+MinimalPublisher::MinimalPublisher() : Node("minimal_publisher"), count_(0) {
+  publisher_ = this->create_publisher<STRING>("topic", 10);
+  // Setting up parameter for publisher frequency
+  auto freq_d = rcl_interfaces::msg::ParameterDescriptor();
+  freq_d.description = "Sets Publisher frequency in Hz.";
+  this->declare_parameter("freq_pub", 3.0, freq_d);
+  auto freq_pub =
+      this->get_parameter("freq_pub").get_parameter_value().get<std::float_t>();
+
+  timer_ = this->create_wall_timer(
+      std::chrono::milliseconds(static_cast<int>(1000 / freq_pub)),
+      std::bind(&MinimalPublisher::timer_callback, this));
+
+  auto serviceCallbackPtr =
+      std::bind(&MinimalPublisher::change_base_string_srv, this,
+                std::placeholders::_1, std::placeholders::_2);
+
+  service_ = create_service<RENAME_STRING>("update_string", serviceCallbackPtr);
+
+  // checks if any subscribers are already listening
+  if (this->count_subscribers("topic") == 0) {
+    RCLCPP_WARN_STREAM(this->get_logger(), "No subscriber found on this topic");
   }
-/**
- * @brief Callback to update the base string if there is response from server
- * 
- * @param future 
- */
-  void response_callback(sharedFuture future) {
-    // Process the response
-    RCLCPP_INFO(this->get_logger(), "Got : %s", future.get()->c.c_str());
-    Message = future.get()->c.c_str();
-  }
-/**
- * @brief Callback Function to handle Parameter calls
- * 
- * @param param 
- */
-  void param_callback(const rclcpp::Parameter & param) {
-    RCLCPP_INFO(this->get_logger(),
-                 "cb: Received an update to parameter \"%s\" of type %s: %.2f",
-                 param.get_name().c_str(),
-                 param.get_type_name().c_str(),
-                 param.as_double());
-    RCLCPP_WARN(this->get_logger(),
-    "You have changed the base frequency this might affect some functionality");
+  this->get_logger().set_level(rclcpp::Logger::Level::Debug);
 
-    RCLCPP_FATAL_EXPRESSION(this->get_logger(), param.as_double() == 0.0,
-    "Frequency is beign set to zero and will lead to zero division error");
-    if (param.as_double() == 0.0) {
-      RCLCPP_ERROR(this->get_logger(),
-      "Frequency has not been changed as it would lead to zero division error");
-    } else {
-      auto period =
-      std::chrono::milliseconds(static_cast<int> ((1000 / param.as_double())));
-      timer_ = this->create_wall_timer(
-      period, std::bind(&MinimalPublisher::timer_callback, this));
-    }
-  }
-  // TF Publisher
-  void transform_publish(){
-    geometry_msgs::msg::TransformStamped t;
+  tf_static_broadcaster_ =
+      std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
-    // Read message content and assign it to
-    // corresponding tf variables
-    t.header.stamp = this->get_clock()->now();
-    t.header.frame_id = "world";
-    t.child_frame_id = "dummy";
+  geometry_msgs::msg::TransformStamped t;
 
-    // Turtle only exists in 2D, thus we get x and y translation
-    // coordinates from the message and set the z coordinate to 0
-    t.transform.translation.x = 1.0*(rand()%10);
-    t.transform.translation.y = 1.0*(rand()%10);
-    t.transform.translation.z = 1.0*(rand()%10);
+  t.header.stamp = this->get_clock()->now();
+  t.header.frame_id = "world";
+  t.child_frame_id = "talk";
 
-    // For the same reason, turtle can only rotate around one axis
-    // and this why we set rotation in x and y to 0 and obtain
-    // rotation in z axis from the message
-    tf2::Quaternion q;
-    q.setRPY(0, 0, 1.0*(rand()%10));
-    t.transform.rotation.x = q.x();
-    t.transform.rotation.y = q.y();
-    t.transform.rotation.z = q.z();
-    t.transform.rotation.w = q.w();
+  // Translation component in meters
+  t.transform.translation.x = 0.1;
+  t.transform.translation.y = 0.2;
+  t.transform.translation.z = 0.3;
 
-    // Send the transformation
-    tf_broadcaster_->sendTransform(t);
-  }
-};
+  // Quaternion corresponding to XYZ Euler Angles
+  t.transform.rotation.x = 0.05;
+  t.transform.rotation.y = 0.03;
+  t.transform.rotation.z = 0.02;
+  t.transform.rotation.w = 0.1;
+
+  tf_static_broadcaster_->sendTransform(t);
+}
+
+void MinimalPublisher::timer_callback() {
+  auto message = std_msgs::msg::String();
+  message.data = main_string + std::to_string(count_++);
+  RCLCPP_INFO_STREAM(this->get_logger(), "Publishing: " << message.data);
+  publisher_->publish(message);
+}
 
 /**
- * @brief Main function Entrypoint for program
- * 
- * @param argc 
- * @param argv 
- * @return int 
+ * @brief Service that changes the base string to the requested message.
+ *
+ * @param request
+ * @param response
  */
-int main(int argc, char * argv[]) {
+void MinimalPublisher::change_base_string_srv(REQUEST request,
+                                              RESPONSE response) {
+  response->out = request->inp;
+  if (response->out == main_string) {
+    RCLCPP_DEBUG_STREAM(this->get_logger(), "Tried debug stream");
+  }
+  main_string = response->out;
+  RCLCPP_INFO_STREAM(this->get_logger(),
+                     "Incoming request" << request->inp);  // CHANGE
+  RCLCPP_INFO_STREAM(this->get_logger(),
+                     "sending back response:" << response->out);
+}
+
+/**
+ * @brief returns an error stream message when forced to shutdown using ctrl+c
+ *
+ * @param signum
+ */
+void node_forcestop(int signum) {
+  if (signum == 2) {
+    RCLCPP_ERROR_STREAM(rclcpp::get_logger("rclcpp"), "Force stopped! Bye!");
+  }
+}
+
+int main(int argc, char* argv[]) {
+  signal(SIGINT, node_forcestop);
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<MinimalPublisher>());
   rclcpp::shutdown();
